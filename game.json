@@ -1,0 +1,43 @@
+{
+	"start":{
+		"question":"What's the cyber on the cyber?",
+		"options":[
+			{
+				"value":"Die",
+				"next": "part2"
+			},
+			{
+				"value":"fuck u",
+				"next": "part3"
+			}
+		]
+	},
+	"part2":{
+		"question":"How cyber r u?",
+		"options":[
+			{
+				"value":"very",
+				"next": "part3"
+			},
+			{
+				"value":"not",
+				"next": "start"
+			}
+		]
+	},
+	"part3":{
+		"question":"Big or sad?",
+		"options":[
+			{
+				"value":"sad",
+				"next": "part2"
+			},
+			{
+				"value":"big",
+				"next": "start"
+			}
+		]
+	}
+
+
+}
