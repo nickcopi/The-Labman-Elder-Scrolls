@@ -38,6 +38,7 @@ Class Game{
         $this.gameLoop();
     }
     [void] buildStages(){
+        Get-Content 'game.json' | ConvertTo-JSON
         $this.start = (New-Object Stage("It says ur dumb what do u do?",@((New-Object Option("cry",$null)),(New-Object Option("die",$null)))));
         $this.start = (New-Object Stage("I eat rocks.",@((New-Object Option("yes",$this.start)),(New-Object Option("no",$null)))));
         $this.currentStage = $this.start;
