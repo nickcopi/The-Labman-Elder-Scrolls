@@ -10,6 +10,13 @@ Class Stage{
             $this.options.Add($_);
         }
     }
+    Stage($object){
+        $this.question = $object.question;
+        $this.options = New-Object -TypeName "System.Collections.ArrayList";
+        $object.options | %{
+            $this.options.Add((New-Object Option($_.value,$null)));
+        }
+    }
     [string] getOptionNames(){
         $names = '';
         $i = 1;
@@ -29,19 +36,34 @@ Class Option{
         $this.next = $next;
     }
 }
-
 Class Game{
     [Stage] $start;
     [Stage] $currentStage;
+    [Object] $stages;
+    [Object] $data;
     Game(){
         $this.buildStages();
-        $this.gameLoop();
+        #$this.gameLoop();
     }
     [void] buildStages(){
-        Get-Content 'game.json' | ConvertTo-JSON
-        $this.start = (New-Object Stage("It says ur dumb what do u do?",@((New-Object Option("cry",$null)),(New-Object Option("die",$null)))));
-        $this.start = (New-Object Stage("I eat rocks.",@((New-Object Option("yes",$this.start)),(New-Object Option("no",$null)))));
+        $this.data = Get-Content 'game.json' | ConvertFrom-JSON
+        $stageNames = $this.data.PSObject.Properties.name;
+        $this.stages =  New-Object -TypeName PSobject;
+        $stageNames | %{
+            $this.stages | Add-Member -MemberType NoteProperty  -Name $_ -Value ($this.data."$_");
+        }
+        $stageNames | %{
+            $this.stages."$_".options | % {
+                
+            }
+        }
+        $this.start = $this.stages.start;
         $this.currentStage = $this.start;
+
+        #Write-Host ($data)
+        #$this.start = (New-Object Stage("It says ur dumb what do u do?",@((New-Object Option("cry",$null)),(New-Object Option("die",$null)))));
+        #$this.start = (New-Object Stage("I eat rocks.",@((New-Object Option("yes",$this.start)),(New-Object Option("no",$null)))));
+        #$this.currentStage = $this.start;
     }
     [void] gameLoop(){
         while($this.currentStage){
