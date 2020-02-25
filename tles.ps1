@@ -37,13 +37,13 @@ Class Option{
     }
 }
 Class Game{
-    [Stage] $start;
-    [Stage] $currentStage;
+    [Ref] $start;
+    [Ref] $currentStage;
     [Object] $stages;
     [Object] $data;
     Game(){
         $this.buildStages();
-        #$this.gameLoop();
+        $this.gameLoop();
     }
     [void] buildStages(){
         $this.data = Get-Content 'game.json' | ConvertFrom-JSON
@@ -54,27 +54,24 @@ Class Game{
         }
         $stageNames | %{
             $this.stages."$_".options | % {
-                
+                $next = $_.next;
+                $_.next = $this.stages."$next";
             }
         }
         $this.start = $this.stages.start;
         $this.currentStage = $this.start;
-
-        #Write-Host ($data)
-        #$this.start = (New-Object Stage("It says ur dumb what do u do?",@((New-Object Option("cry",$null)),(New-Object Option("die",$null)))));
-        #$this.start = (New-Object Stage("I eat rocks.",@((New-Object Option("yes",$this.start)),(New-Object Option("no",$null)))));
-        #$this.currentStage = $this.start;
     }
     [void] gameLoop(){
-        while($this.currentStage){
-            Write-Host $this.currentStage.question;
-            Write-Host $this.currentStage.getOptionNames();
+        while($this.currentStage.Value){
+            [Stage] $stage = $this.currentStage.Value;
+            Write-Host $stage.question;
+            Write-Host $stage.getOptionNames();
             $selected = -1;
             do{
                 $input = Read-Host 'What do you do?';
                 $selected = $input -as [int];
-            } while($selected -le 0 -or $selected -gt $this.currentStage.options.Count);
-            $this.currentStage = $this.currentStage.options[$selected-1].next;
+            } while($selected -le 0 -or $selected -gt $stage.options.Count);
+            $this.currentStage = $this.currentStage.Value.options[$selected-1].next;
         }
     }
 
