@@ -14,7 +14,7 @@ Class Stage{
         $this.question = $object.question;
         $this.options = New-Object -TypeName "System.Collections.ArrayList";
         $object.options | %{
-            $this.options.Add((New-Object Option($_.value,$null)));
+            $this.options.Add((New-Object Option($_.value,$null,$_.result)));
         }
     }
     [string] getOptionNames(){
@@ -31,9 +31,11 @@ Class Stage{
 Class Option{
     [string] $value;
     [Stage] $next;
-    Option($value,$next){
+    [string] $result;
+    Option($value,$next,$result){
         $this.value = $value;
         $this.next = $next;
+        $this.result = $result;
     }
 }
 Class Game{
@@ -71,11 +73,11 @@ Class Game{
                 $input = Read-Host 'What do you do?';
                 $selected = $input -as [int];
             } while($selected -le 0 -or $selected -gt $stage.options.Count);
+            Write-Host $this.currentStage.Value.options[$selected-1].result;
             $this.currentStage = $this.currentStage.Value.options[$selected-1].next;
         }
     }
 
 }
 
-#Write-Host ((New-Object Stage("It says ur dumb what do u do?",@(New-Object Option("cry",$null))))).options[0].value
 $game = New-Object Game
