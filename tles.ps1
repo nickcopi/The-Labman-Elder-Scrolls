@@ -22,7 +22,7 @@ Class Stage{
         $i = 1;
         $this.options | % {
             $names += $i.ToString() + ') ' + $_.value + "`n";
-            $i++
+            $i++;
         }
         return $names;
     }
@@ -48,7 +48,7 @@ Class Game{
         $this.gameLoop();
     }
     [void] buildStages(){
-        $this.data = Get-Content 'game.json' | ConvertFrom-JSON
+        $this.data = Get-Content 'game.json' | ConvertFrom-JSON;
         $stageNames = $this.data.PSObject.Properties.name;
         $this.stages =  New-Object -TypeName PSobject;
         $stageNames | %{
@@ -80,4 +80,4 @@ Class Game{
 
 }
 
-$game = New-Object Game
+$game = New-Object Game;
